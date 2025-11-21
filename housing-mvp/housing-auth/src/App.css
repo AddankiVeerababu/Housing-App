@@ -1,0 +1,17 @@
+import React from "react";
+
+export default function App() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-neutral-50 to-neutral-200 p-6">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+        <h1 className="text-2xl font-extrabold mb-2">Tailwind OK ✅</h1>
+        <p className="text-neutral-600 mb-4">
+          If this box looks styled, Tailwind is working.
+        </p>
+        <button className="px-4 py-2 rounded-xl bg-neutral-900 text-white hover:bg-neutral-800 transition">
+          Looks good
+        </button>
+      </div>
+    </div>
+  );
+}

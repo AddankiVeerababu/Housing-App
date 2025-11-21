@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Listing",
+  "type": "object",
+  "required": ["title", "priceCents", "visibility"],
+  "properties": {
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "ownerId": { "type": "string" },
+    "visibility": { "type": "string", "enum": ["public", "private", "unlisted"] },
+
+    "title": { "type": "string", "maxLength": 80 },
+    "description": { "type": "string" },
+    "photos": {
+      "type": "array",
+      "maxItems": 12,
+      "items": { "type": "string", "format": "uri" }
+    },
+
+    "priceCents": { "type": "integer", "minimum": 0 },
+    "currency": { "type": "string", "default": "usd" },
+    "period": { "type": "string", "enum": ["mo", "wk"] },
+
+    "beds": { "type": "integer", "minimum": 0 },
+    "baths": { "type": "integer", "minimum": 0 },
+    "sqft": { "type": "integer", "minimum": 0 },
+
+    "address": { "type": "string", "maxLength": 160 },
+    "geo": {
+      "type": "object",
+      "properties": {
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lng": { "type": "number", "minimum": -180, "maximum": 180 }
+      },
+      "required": ["lat", "lng"]
+    },
+    "amenities": { "type": "array", "items": { "type": "string" } },
+    "availabilityDate": { "type": "string", "format": "date" },
+
+    "category": { "type": "string", "enum": ["SALE", "RENT"] },
+    "propertyType": {
+      "type": "string",
+      "enum": ["APARTMENT", "HOUSE", "VILLA", "CONDO", "TOWNHOUSE", "LAND", "OTHER"]
+    }
+  },
+  "additionalProperties": false
+}

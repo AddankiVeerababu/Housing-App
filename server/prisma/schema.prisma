@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== Enums =====
+enum Role {
+  BUYER
+  SELLER
+  RENTER
+  AGENT
+}
+
+enum Category {
+  SALE
+  RENT
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  VILLA
+  CONDO
+  TOWNHOUSE
+  LAND
+  OTHER
+}
+
+enum VisitStatus {
+  REQUESTED
+  CONFIRMED
+  CANCELED
+  COMPLETED
+}
+
+// ===== Models =====
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  name         String?
+  role         Role     @default(BUYER)
+  phone        String?
+  provider     String
+  createdAt    DateTime @default(now())
+
+  listings Listing[] @relation("UserListings")
+  visits   Visit[]
+}
+
+model Amenity {
+  id       String           @id @default(cuid())
+  code     String           @unique
+  label    String
+  listings ListingAmenity[]
+
+  @@index([code])
+}
+
+model Listing {
+  id           String       @id @default(cuid())
+  title        String
+  description  String
+  price        Int
+  currency     String       @default("USD")
+  category     Category
+  propertyType PropertyType
+  bedrooms     Int?
+  bathrooms    Int?
+  areaSqft     Int?
+  yearBuilt    Int?
+
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  state        String?
+  postalCode   String?
+  country      String?
+  latitude     Float?
+  longitude    Float?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String?
+  createdBy   User?   @relation("UserListings", fields: [createdById], references: [id])
+
+  photos    ListingPhoto[]
+  amenities ListingAmenity[]
+  visits    Visit[]
+
+  @@index([category])
+  @@index([propertyType])
+  @@index([city])
+  @@index([state])
+  @@index([price])
+  @@index([latitude, longitude])
+}
+
+model ListingPhoto {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id])
+  url       String
+  caption   String?
+  order     Int
+
+  @@index([listingId])
+}
+
+model ListingAmenity {
+  id        String @id @default(cuid())
+  listingId String
+  amenityId String
+
+  listing Listing @relation(fields: [listingId], references: [id])
+  amenity Amenity @relation(fields: [amenityId], references: [id])
+
+  @@unique([listingId, amenityId])
+  @@index([listingId])
+  @@index([amenityId])
+}
+
+model Visit {
+  id          String      @id @default(cuid())
+  userId      String
+  listingId   String
+  user        User        @relation(fields: [userId], references: [id])
+  listing     Listing     @relation(fields: [listingId], references: [id])
+  scheduledAt DateTime
+  status      VisitStatus @default(REQUESTED)
+  notes       String?
+  createdAt   DateTime    @default(now())
+
+  @@index([userId])
+  @@index([listingId])
+  @@index([scheduledAt])
+  @@index([status])
+}

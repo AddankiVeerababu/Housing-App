@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Review",
+  "type": "object",
+  "required": ["authorId", "target", "rating", "visibility"],
+  "properties": {
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "authorId": { "type": "string" },
+    "target": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["listing"] },
+        "id": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "text": { "type": "string", "maxLength": 1000 },
+    "visibility": { "type": "string", "enum": ["public", "private", "unlisted"] }
+  },
+  "additionalProperties": false
+}

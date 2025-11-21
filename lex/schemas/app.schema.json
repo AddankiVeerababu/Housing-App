@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Lex App",
+  "type": "object",
+  "required": ["name", "template", "addons", "visibility", "status"],
+  "properties": {
+    "name": { "type": "string", "maxLength": 80 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "template": { "type": "string", "enum": ["housing"] },
+    "addons": { "type": "object" },
+    "branding": {
+      "type": "object",
+      "properties": {
+        "primary": { "type": "string" },
+        "logoUrl": { "type": "string", "format": "uri" },
+        "iconUrl": { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": false
+    },
+    "visibility": { "type": "string", "enum": ["public", "private", "unlisted"] },
+    "status": { "type": "string", "enum": ["active", "paused", "archived"] }
+  },
+  "additionalProperties": false
+}
